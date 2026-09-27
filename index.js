@@ -803,11 +803,92 @@ function bindSettingsDrawer() {
   document.getElementById('rce-sync-card-btn')?.addEventListener('click', syncCharacterCardToBackend);
 }
 
+async function mountSettingsDrawer() {
+  if (document.getElementById('rce-extension-settings')) return;
+  try {
+    const htmlUrl = new URL('settings.html', import.meta.url).href;
+    const res = await fetch(htmlUrl);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const html = await res.text();
+
+    const tryInject = () => {
+      if (document.getElementById('rce-extension-settings')) return true;
+      const target = document.getElementById('extensions_settings') || document.getElementById('extensions_settings2');
+      if (target) {
+        target.insertAdjacentHTML('beforeend', html);
+        bindSettingsDrawer();
+        setupDrawerAccordion();
+        return true;
+      }
+      return false;
+    };
+
+    if (!tryInject()) {
+      let count = 0;
+      const timer = setInterval(() => {
+        count++;
+        if (tryInject() || count > 30) {
+          clearInterval(timer);
+        }
+      }, 500);
+    }
+  } catch (err) {
+    console.error(`[${EXTENSION_NAME}] Failed to load settings.html:`, err);
+  }
+}
+
+function setupDrawerAccordion() {
+  const toggle = document.querySelector('#rce-extension-settings .inline-drawer-toggle');
+  const content = document.querySelector('#rce-extension-settings .inline-drawer-content');
+  const icon = document.querySelector('#rce-extension-settings .inline-drawer-icon');
+  if (toggle && content) {
+    toggle.addEventListener('click', () => {
+      const isVisible = content.style.display !== 'none' && getComputedStyle(content).display !== 'none';
+      content.style.display = isVisible ? 'none' : 'block';
+      if (icon) {
+        icon.classList.toggle('fa-circle-chevron-down', isVisible);
+        icon.classList.toggle('fa-circle-chevron-up', !isVisible);
+      }
+    });
+  }
+}
+
+function mountOptionsEntry() {
+  const menu = document.querySelector('#options .options-content');
+  if (!(menu instanceof HTMLElement) || document.getElementById('option_rce_engine')) return;
+
+  const item = document.createElement('a');
+  item.id = 'option_rce_engine';
+  item.innerHTML = '<i class="fa-lg fa-solid fa-brain"></i><span>拟真角色引擎</span>';
+  item.addEventListener('click', (event) => {
+    event.preventDefault();
+    const options = document.getElementById('options');
+    if (options) options.style.display = 'none';
+
+    const extBtn = document.getElementById('extensions_button');
+    if (extBtn) extBtn.click();
+
+    setTimeout(() => {
+      const drawer = document.getElementById('rce-extension-settings');
+      if (drawer) {
+        drawer.scrollIntoView({ behavior: 'smooth' });
+        const content = drawer.querySelector('.inline-drawer-content');
+        if (content && (content.style.display === 'none' || getComputedStyle(content).display === 'none')) {
+          drawer.querySelector('.inline-drawer-toggle')?.click();
+        }
+      }
+    }, 250);
+  });
+
+  menu.insertBefore(item, document.getElementById('option_back_to_main') || menu.firstChild);
+}
+
 // ==================== Lifecycle Initialization ====================
 jQuery(async () => {
   try {
     console.info(`[${EXTENSION_NAME}] Initializing Real Character Simulation Engine extension...`);
-    bindSettingsDrawer();
+    await mountSettingsDrawer();
+    mountOptionsEntry();
     ensureFloatingHud();
     attachSendInterception();
     checkBackendConnection();
