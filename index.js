@@ -13,8 +13,6 @@ const EXTENSION_DISPLAY_NAME = '拟真角色模拟引擎';
 const DEFAULT_SETTINGS = {
   enabled: true,
   serverUrl: 'http://127.0.0.1:4000',
-  enableBurstMessaging: true,
-  typingSpeedMultiplier: 1.0,
   showFloatingHud: true,
   hudPosition: { right: 24, bottom: 90 },
   hudCollapsed: false,
@@ -443,7 +441,7 @@ function showTypingIndicator(charName, avatarUrl) {
       <span></span>
       <span></span>
     </div>
-    <span class="rce-typing-label">${escapeHtml(charName)} 正在输入...</span>
+    <span class="rce-typing-label">${escapeHtml(charName)} 正在推演角色心理反应...</span>
   `;
   chatEl.appendChild(bubble);
   chatEl.scrollTop = chatEl.scrollHeight;
@@ -567,48 +565,20 @@ async function triggerRceGeneration() {
       renderHudContent();
     }
 
-    // 5. Sequential Burst Messaging Sequence
-    const burstFrames = (data.burstFrames && data.burstFrames.length > 0)
-      ? data.burstFrames
-      : [{ text: data.text, typingDelayMs: 600 }];
+    // 5. Unified Single Roleplay Response Injection
+    removeTypingIndicator();
 
-    if (settings.enableBurstMessaging && burstFrames.length > 1) {
-      for (let i = 0; i < burstFrames.length; i++) {
-        const frame = burstFrames[i];
-        const delay = Math.max(200, Math.round((frame.typingDelayMs || 800) / settings.typingSpeedMultiplier));
-        showTypingIndicator(char.name, avatarUrl);
-        await new Promise((r) => setTimeout(r, delay));
-        removeTypingIndicator();
-
-        const frameMsg = {
-          is_user: false,
-          is_system: false,
-          name: char.name,
-          mes: frame.text,
-          send_date: new Date().toISOString(),
-          extra: i === burstFrames.length - 1 ? { rce_telemetry: data.telemetry } : {},
-        };
-        chat.push(frameMsg);
-        appendMessageToDom(frameMsg, chat.length - 1);
-        if (typeof saveChatDebounced === 'function') saveChatDebounced();
-      }
-    } else {
-      const delay = Math.min(1200, Math.max(300, Math.round(data.text.length * 15 / settings.typingSpeedMultiplier)));
-      await new Promise((r) => setTimeout(r, delay));
-      removeTypingIndicator();
-
-      const finalMsg = {
-        is_user: false,
-        is_system: false,
-        name: char.name,
-        mes: data.text,
-        send_date: new Date().toISOString(),
-        extra: { rce_telemetry: data.telemetry },
-      };
-      chat.push(finalMsg);
-      appendMessageToDom(finalMsg, chat.length - 1);
-      if (typeof saveChatDebounced === 'function') saveChatDebounced();
-    }
+    const finalMsg = {
+      is_user: false,
+      is_system: false,
+      name: char.name,
+      mes: data.text,
+      send_date: new Date().toISOString(),
+      extra: { rce_telemetry: data.telemetry },
+    };
+    chat.push(finalMsg);
+    appendMessageToDom(finalMsg, chat.length - 1);
+    if (typeof saveChatDebounced === 'function') saveChatDebounced();
   } catch (err) {
     removeTypingIndicator();
     console.error(`[${EXTENSION_NAME}] Turn generation error:`, err);
@@ -619,6 +589,23 @@ async function triggerRceGeneration() {
     isGenerating = false;
     removeTypingIndicator();
   }
+}
+
+function formatRoleplayText(text) {
+  if (!text) return '';
+  if (typeof window.messageFormatting === 'function') {
+    try {
+      return window.messageFormatting(text, '', false, false);
+    } catch (e) {
+      // fallback
+    }
+  }
+  let safe = escapeHtml(text);
+  safe = safe.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  safe = safe.replace(/\*([^*\n]+?)\*/g, '<em class="rce-rp-action">*$1*</em>');
+  safe = safe.replace(/(“[^”]+?”)/g, '<span class="rce-rp-dialogue">$1</span>');
+  safe = safe.replace(/\n\n+/g, '</p><p>').replace(/\n/g, '<br>');
+  return `<p>${safe}</p>`;
 }
 
 function appendMessageToDom(msg, index) {
@@ -651,7 +638,7 @@ function appendMessageToDom(msg, index) {
   msgDiv.innerHTML = `
     ${avatarUrl ? `<img class="avatar" src="${avatarUrl}" />` : ''}
     <div class="ch_name"><b>${escapeHtml(msg.name)}</b></div>
-    <div class="mes_text">${escapeHtml(msg.mes)}</div>
+    <div class="mes_text">${formatRoleplayText(msg.mes)}</div>
     ${stampHtml}
   `;
 
@@ -742,23 +729,6 @@ function bindSettingsDrawer() {
   }
 
   document.getElementById('rce-test-connection-btn')?.addEventListener('click', checkBackendConnection);
-
-  const burstEl = document.getElementById('rce-burst-enabled');
-  if (burstEl) {
-    burstEl.checked = !!settings.enableBurstMessaging;
-    burstEl.addEventListener('change', (e) => updateSettings({ enableBurstMessaging: e.target.checked }));
-  }
-
-  const speedEl = document.getElementById('rce-typing-speed');
-  const speedValEl = document.getElementById('rce-typing-speed-val');
-  if (speedEl && speedValEl) {
-    speedEl.value = String(settings.typingSpeedMultiplier || 1.0);
-    speedValEl.textContent = `${speedEl.value}x`;
-    speedEl.addEventListener('input', (e) => {
-      speedValEl.textContent = `${e.target.value}x`;
-      updateSettings({ typingSpeedMultiplier: parseFloat(e.target.value) });
-    });
-  }
 
   const hudEl = document.getElementById('rce-hud-enabled');
   if (hudEl) {

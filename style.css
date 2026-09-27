@@ -540,3 +540,14 @@ input:checked + .rce-slider:before {
   50% { box-shadow: 0 0 10px #22c55e; }
   100% { box-shadow: 0 0 4px #22c55e; }
 }
+
+/* Roleplay text formatting */
+.rce-rp-action {
+  color: var(--SmartThemeQuoteColor, #94a3b8);
+  font-style: italic;
+}
+
+.rce-rp-dialogue {
+  color: var(--SmartThemeBodyColor, #f8fafc);
+  font-weight: 500;
+}
