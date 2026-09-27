@@ -148,40 +148,54 @@ function ensureFloatingHud() {
 
 function initHudDraggable(hudEl) {
   let isDragging = false;
-  let startX, startY, initialRight, initialBottom;
+  let hasMoved = false;
+  let startX = 0;
+  let startY = 0;
+  let initialRight = 0;
+  let initialBottom = 0;
 
-  const header = hudEl;
-  header.addEventListener('mousedown', (e) => {
-    if (e.target.closest('.rce-hud-btn') || e.target.closest('.rce-hud-body')) return;
+  hudEl.addEventListener('mousedown', (e) => {
+    if (e.button !== 0) return;
+    if (e.target.closest('.rce-hud-btn') || e.target.closest('input') || e.target.closest('button') || e.target.closest('.rce-hud-body')) {
+      return;
+    }
     isDragging = true;
+    hasMoved = false;
     startX = e.clientX;
     startY = e.clientY;
     const rect = hudEl.getBoundingClientRect();
     initialRight = window.innerWidth - rect.right;
     initialBottom = window.innerHeight - rect.bottom;
-    e.preventDefault();
   });
 
   window.addEventListener('mousemove', (e) => {
     if (!isDragging) return;
     const deltaX = e.clientX - startX;
     const deltaY = e.clientY - startY;
-    const newRight = Math.max(10, Math.min(window.innerWidth - 100, initialRight - deltaX));
-    const newBottom = Math.max(10, Math.min(window.innerHeight - 100, initialBottom - deltaY));
-    hudEl.style.right = `${newRight}px`;
-    hudEl.style.bottom = `${newBottom}px`;
+    if (!hasMoved && (Math.abs(deltaX) > 4 || Math.abs(deltaY) > 4)) {
+      hasMoved = true;
+    }
+    if (hasMoved) {
+      e.preventDefault();
+      const newRight = Math.max(10, Math.min(window.innerWidth - 100, initialRight - deltaX));
+      const newBottom = Math.max(10, Math.min(window.innerHeight - 100, initialBottom - deltaY));
+      hudEl.style.right = `${newRight}px`;
+      hudEl.style.bottom = `${newBottom}px`;
+    }
   });
 
   window.addEventListener('mouseup', () => {
     if (isDragging) {
       isDragging = false;
-      const rect = hudEl.getBoundingClientRect();
-      updateSettings({
-        hudPosition: {
-          right: Math.round(window.innerWidth - rect.right),
-          bottom: Math.round(window.innerHeight - rect.bottom),
-        },
-      });
+      if (hasMoved) {
+        const rect = hudEl.getBoundingClientRect();
+        updateSettings({
+          hudPosition: {
+            right: Math.round(window.innerWidth - rect.right),
+            bottom: Math.round(window.innerHeight - rect.bottom),
+          },
+        });
+      }
     }
   });
 }
@@ -207,10 +221,15 @@ function renderHudContent() {
         <div class="rce-pill-meta">${escapeHtml(charName)}</div>
       </div>
     `;
-    document.getElementById('rce-hud-pill-btn')?.addEventListener('click', () => {
-      updateSettings({ hudCollapsed: false });
-      renderHudContent();
-    });
+    const pillBtn = document.getElementById('rce-hud-pill-btn');
+    if (pillBtn) {
+      pillBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        updateSettings({ hudCollapsed: false });
+        renderHudContent();
+      });
+    }
     return;
   }
 
@@ -838,16 +857,34 @@ async function mountSettingsDrawer() {
 }
 
 function setupDrawerAccordion() {
-  const toggle = document.querySelector('#rce-extension-settings .inline-drawer-toggle');
-  const content = document.querySelector('#rce-extension-settings .inline-drawer-content');
-  const icon = document.querySelector('#rce-extension-settings .inline-drawer-icon');
+  const container = document.getElementById('rce-extension-settings');
+  if (!container) return;
+
+  const toggle = container.querySelector('.inline-drawer-toggle');
+  const content = container.querySelector('.inline-drawer-content');
+
   if (toggle && content) {
-    toggle.addEventListener('click', () => {
-      const isVisible = content.style.display !== 'none' && getComputedStyle(content).display !== 'none';
-      content.style.display = isVisible ? 'none' : 'block';
-      if (icon) {
-        icon.classList.toggle('fa-circle-chevron-down', isVisible);
-        icon.classList.toggle('fa-circle-chevron-up', !isVisible);
+    toggle.style.cursor = 'pointer';
+    const freshToggle = toggle.cloneNode(true);
+    toggle.parentNode.replaceChild(freshToggle, toggle);
+
+    freshToggle.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const currentIcon = freshToggle.querySelector('.inline-drawer-icon');
+      const isHidden = content.style.display === 'none' || getComputedStyle(content).display === 'none';
+      if (isHidden) {
+        content.style.display = 'block';
+        if (currentIcon) {
+          currentIcon.classList.remove('fa-circle-chevron-down', 'down');
+          currentIcon.classList.add('fa-circle-chevron-up', 'up');
+        }
+      } else {
+        content.style.display = 'none';
+        if (currentIcon) {
+          currentIcon.classList.remove('fa-circle-chevron-up', 'up');
+          currentIcon.classList.add('fa-circle-chevron-down', 'down');
+        }
       }
     });
   }
@@ -862,8 +899,12 @@ function mountOptionsEntry() {
   item.innerHTML = '<i class="fa-lg fa-solid fa-brain"></i><span>拟真角色引擎</span>';
   item.addEventListener('click', (event) => {
     event.preventDefault();
+    event.stopPropagation();
     const options = document.getElementById('options');
     if (options) options.style.display = 'none';
+
+    updateSettings({ showFloatingHud: true, hudCollapsed: false });
+    renderHudContent();
 
     const extBtn = document.getElementById('extensions_button');
     if (extBtn) extBtn.click();

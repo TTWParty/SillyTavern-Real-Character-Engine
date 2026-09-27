@@ -6,6 +6,20 @@
   color: var(--SmartThemeBodyColor, #e0e0e0);
 }
 
+#rce-extension-settings .inline-drawer-toggle {
+  cursor: pointer !important;
+  user-select: none;
+}
+
+#rce-extension-settings .inline-drawer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+}
+
 .rce-setting-group {
   margin-bottom: 14px;
   padding: 10px 12px;
