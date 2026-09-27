@@ -1,0 +1,13 @@
+{
+  "display_name": "拟真人类认知模拟引擎 (Real Character Engine)",
+  "loading_order": 15,
+  "requires": [],
+  "optional": [],
+  "js": "index.js",
+  "css": "style.css",
+  "author": "TTWParty",
+  "version": "1.0.0",
+  "homePage": "https://github.com/TTWParty/SillyTavern-Real-Character-Engine",
+  "auto_update": false,
+  "description": "全套拟真人类认知模拟引擎：以 System 1 本能微反应、4容量认知聚光灯、动态危机目标替换、死话题冷酷剔除、PADS情感演化、气泡连发节律与自主脉冲彻底接管酒馆对话。"
+}

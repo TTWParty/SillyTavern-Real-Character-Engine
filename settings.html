@@ -1,0 +1,127 @@
+<div id="rce-extension-settings" class="rce-settings-container">
+  <div class="inline-drawer">
+    <div class="inline-drawer-toggle inline-drawer-header">
+      <b id="rce-settings-title">拟真角色模拟引擎 (Real Character Engine)</b>
+      <div class="inline-drawer-icon fa-solid fa-circle-chevron-down"></div>
+    </div>
+    <div class="inline-drawer-content">
+      <div class="rce-setting-group">
+        <div class="rce-setting-row rce-master-row">
+          <div class="rce-label-block">
+            <span class="rce-setting-label">全套拟真引擎接管对话生成</span>
+            <span class="rce-setting-desc">拦截常规酒馆生成，由 12 层认知模拟引擎（System 1 本能、认知聚光灯、死话题肃清、PADS情感）全权接管</span>
+          </div>
+          <label class="rce-switch">
+            <input type="checkbox" id="rce-master-enabled" checked />
+            <span class="rce-slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="rce-setting-group">
+        <div class="rce-group-title">后端服务连接</div>
+        <div class="rce-setting-row">
+          <div class="rce-input-wrapper">
+            <label for="rce-server-url" class="rce-field-label">引擎服务地址 (API URL)</label>
+            <input type="text" id="rce-server-url" class="text_pole" value="http://127.0.0.1:4000" placeholder="http://127.0.0.1:4000" />
+          </div>
+        </div>
+        <div class="rce-actions-row">
+          <button id="rce-test-connection-btn" class="menu_button" type="button">测试服务连通性</button>
+          <span id="rce-connection-status" class="rce-status-badge rce-status-pending">未检测</span>
+        </div>
+      </div>
+
+      <div class="rce-setting-group">
+        <div class="rce-group-title">拟真交互与微信式气泡节律</div>
+        <div class="rce-setting-row">
+          <div class="rce-label-block">
+            <span class="rce-setting-label">微信式连发气泡打字节律 (Burst Messaging)</span>
+            <span class="rce-setting-desc">模拟真人回复时分段连发气泡并伴随打字延迟，拒绝机械大段独白</span>
+          </div>
+          <label class="rce-switch">
+            <input type="checkbox" id="rce-burst-enabled" checked />
+            <span class="rce-slider"></span>
+          </label>
+        </div>
+        <div class="rce-setting-row" id="rce-speed-row">
+          <div class="rce-label-block">
+            <span class="rce-setting-label">气泡打字速度倍率</span>
+            <span class="rce-setting-desc">调节各气泡之间的拟真思考与输入延迟（数值越大打字越快）</span>
+          </div>
+          <div class="rce-slider-control">
+            <input type="range" id="rce-typing-speed" min="0.5" max="2.0" step="0.1" value="1.0" />
+            <span id="rce-typing-speed-val" class="rce-val-display">1.0x</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="rce-setting-group">
+        <div class="rce-group-title">实时认知聚光灯监视器 (Cognitive HUD)</div>
+        <div class="rce-setting-row">
+          <div class="rce-label-block">
+            <span class="rce-setting-label">显示聊天悬浮认知面板 (Floating HUD)</span>
+            <span class="rce-setting-desc">在对话界面悬浮显示实时心理焦距、工作记忆负荷、System 1 微反应与怨念/信任计量</span>
+          </div>
+          <label class="rce-switch">
+            <input type="checkbox" id="rce-hud-enabled" checked />
+            <span class="rce-slider"></span>
+          </label>
+        </div>
+        <div class="rce-setting-row">
+          <div class="rce-label-block">
+            <span class="rce-setting-label">在消息气泡下方渲染认知快照胶囊</span>
+            <span class="rce-setting-desc">在每条生成的角色回复下方显示折叠式心理快照标签</span>
+          </div>
+          <label class="rce-switch">
+            <input type="checkbox" id="rce-message-badge-enabled" checked />
+            <span class="rce-slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="rce-setting-group">
+        <div class="rce-group-title">脱机自主意识节律 (Autonomous Mind Pulse)</div>
+        <div class="rce-setting-row">
+          <div class="rce-label-block">
+            <span class="rce-setting-label">启用脱机自主心跳 (Autonomous Pulse)</span>
+            <span class="rce-setting-desc">角色根据内在动机与场景生态在后台定期产生自主行动或主动发起搭话</span>
+          </div>
+          <label class="rce-switch">
+            <input type="checkbox" id="rce-autonomy-enabled" />
+            <span class="rce-slider"></span>
+          </label>
+        </div>
+        <div class="rce-setting-row" id="rce-autonomy-interval-row">
+          <div class="rce-label-block">
+            <span class="rce-setting-label">心跳探测周期 (秒)</span>
+            <span class="rce-setting-desc">后台尝试评估自主行动的时间间隔</span>
+          </div>
+          <div class="rce-slider-control">
+            <input type="range" id="rce-autonomy-interval" min="30" max="300" step="10" value="60" />
+            <span id="rce-autonomy-interval-val" class="rce-val-display">60s</span>
+          </div>
+        </div>
+        <div class="rce-actions-row">
+          <button id="rce-trigger-pulse-now-btn" class="menu_button" type="button">立即激发一次自主思考</button>
+          <span id="rce-pulse-feedback" class="rce-pulse-feedback-text"></span>
+        </div>
+      </div>
+
+      <div class="rce-setting-group rce-danger-group">
+        <div class="rce-group-title">记忆与关系持久化管理</div>
+        <div class="rce-setting-row">
+          <div class="rce-label-block">
+            <span class="rce-setting-label">同步当前角色卡设定</span>
+            <span class="rce-setting-desc">将酒馆当前选中角色的人设、场景与首言强制同步写入后端认知数据库</span>
+          </div>
+          <button id="rce-sync-card-btn" class="menu_button" type="button">立即同步当前角色</button>
+        </div>
+      </div>
+
+      <div class="rce-footer">
+        <small id="rce-footer-version">拟真人类认知模拟引擎 v1.0.0 | TTWParty</small>
+      </div>
+    </div>
+  </div>
+</div>

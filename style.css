@@ -1,0 +1,528 @@
+/* SillyTavern Real Character Engine - Glassmorphism Aesthetic Stylesheet */
+
+.rce-settings-container {
+  padding: 6px 0;
+  font-family: inherit;
+  color: var(--SmartThemeBodyColor, #e0e0e0);
+}
+
+.rce-setting-group {
+  margin-bottom: 14px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 8px;
+}
+
+.rce-master-row {
+  background: linear-gradient(135deg, rgba(82, 110, 246, 0.12), rgba(120, 75, 220, 0.15));
+  border: 1px solid rgba(94, 115, 255, 0.3);
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+
+.rce-group-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--SmartThemeQuoteColor, #94a3b8);
+  margin-bottom: 8px;
+}
+
+.rce-setting-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.rce-setting-row:last-child {
+  margin-bottom: 0;
+}
+
+.rce-label-block {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.rce-setting-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--SmartThemeBodyColor, #f1f5f9);
+}
+
+.rce-setting-desc {
+  font-size: 11px;
+  opacity: 0.7;
+  color: var(--SmartThemeQuoteColor, #94a3b8);
+  line-height: 1.35;
+}
+
+.rce-input-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.rce-field-label {
+  font-size: 11px;
+  font-weight: 600;
+  opacity: 0.85;
+}
+
+.rce-actions-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.rce-status-badge {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.rce-status-online {
+  background: rgba(34, 197, 94, 0.2);
+  color: #4ade80;
+  border: 1px solid rgba(34, 197, 94, 0.4);
+}
+
+.rce-status-offline {
+  background: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.4);
+}
+
+.rce-status-pending {
+  background: rgba(148, 163, 184, 0.2);
+  color: #94a3b8;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+}
+
+.rce-slider-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rce-slider-control input[type="range"] {
+  width: 100px;
+}
+
+.rce-val-display {
+  font-size: 12px;
+  font-weight: 600;
+  min-width: 36px;
+  text-align: right;
+  color: #818cf8;
+}
+
+.rce-pulse-feedback-text {
+  font-size: 11px;
+  opacity: 0.85;
+  color: #94a3b8;
+}
+
+.rce-footer {
+  text-align: center;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  margin-top: 8px;
+}
+
+/* Switch Component */
+.rce-switch {
+  position: relative;
+  display: inline-block;
+  width: 38px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.rce-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.rce-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.15);
+  transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 20px;
+}
+
+.rce-slider:before {
+  position: absolute;
+  content: "";
+  height: 14px;
+  width: 14px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 50%;
+}
+
+input:checked + .rce-slider {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+}
+
+input:checked + .rce-slider:before {
+  transform: translateX(18px);
+}
+
+/* ==================== Floating Cognitive HUD ==================== */
+#rce-floating-hud {
+  position: fixed;
+  z-index: 2000;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  user-select: none;
+  touch-action: none;
+}
+
+.rce-hud-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: rgba(15, 23, 42, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(99, 102, 241, 0.35);
+  border-radius: 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45), 0 0 10px rgba(99, 102, 241, 0.25);
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.rce-hud-pill:hover {
+  transform: scale(1.02);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.55), 0 0 14px rgba(99, 102, 241, 0.4);
+}
+
+.rce-pill-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 6px #22c55e;
+  animation: rce-pulse-glow 2s infinite;
+}
+
+.rce-pill-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: #e2e8f0;
+  letter-spacing: 0.3px;
+}
+
+.rce-pill-meta {
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.rce-hud-panel {
+  width: 320px;
+  max-width: 90vw;
+  background: rgba(15, 23, 42, 0.94);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6), 0 0 20px rgba(99, 102, 241, 0.2);
+  overflow: hidden;
+  color: #e2e8f0;
+}
+
+.rce-hud-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.15));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  cursor: grab;
+}
+
+.rce-hud-header:active {
+  cursor: grabbing;
+}
+
+.rce-hud-title-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rce-hud-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #f8fafc;
+}
+
+.rce-hud-controls {
+  display: flex;
+  gap: 6px;
+}
+
+.rce-hud-btn {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 2px 6px;
+  font-size: 12px;
+  border-radius: 4px;
+}
+
+.rce-hud-btn:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.rce-hud-body {
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 480px;
+  overflow-y: auto;
+}
+
+/* System 1 Micro Section */
+.rce-hud-section {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+
+.rce-hud-section-title {
+  font-size: 10px;
+  font-weight: 700;
+  color: #818cf8;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.rce-system-one-box {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.rce-micro-text {
+  font-size: 12px;
+  color: #f1f5f9;
+  font-style: italic;
+  background: rgba(0, 0, 0, 0.25);
+  padding: 4px 8px;
+  border-radius: 4px;
+  border-left: 2px solid #818cf8;
+}
+
+.rce-tag-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 2px;
+}
+
+.rce-tag {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+  background: rgba(99, 102, 241, 0.2);
+  color: #a5b4fc;
+  border: 1px solid rgba(99, 102, 241, 0.3);
+}
+
+.rce-tag-warning {
+  background: rgba(239, 68, 68, 0.2);
+  color: #fca5a5;
+  border-color: rgba(239, 68, 68, 0.35);
+}
+
+/* Spotlight & Memory Meter */
+.rce-meter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rce-meter-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.rce-meter-label-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: #94a3b8;
+}
+
+.rce-meter-bar-bg {
+  width: 100%;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.rce-meter-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.rce-fill-spotlight { background: linear-gradient(90deg, #6366f1, #a855f7); }
+.rce-fill-trust { background: #38bdf8; }
+.rce-fill-affection { background: #f472b6; }
+.rce-fill-resentment { background: #ef4444; }
+.rce-fill-intimacy { background: #c084fc; }
+
+.rce-memory-slots {
+  display: flex;
+  gap: 4px;
+  margin-top: 2px;
+}
+
+.rce-memory-slot {
+  flex: 1;
+  height: 6px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.rce-memory-slot.occupied {
+  background: #a855f7;
+  box-shadow: 0 0 4px rgba(168, 85, 247, 0.5);
+}
+
+/* PADS Emotion Grid */
+.rce-pads-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+}
+
+.rce-pads-item {
+  background: rgba(0, 0, 0, 0.2);
+  padding: 4px;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.rce-pads-key {
+  font-size: 9px;
+  color: #94a3b8;
+}
+
+.rce-pads-val {
+  font-size: 11px;
+  font-weight: 700;
+  color: #38bdf8;
+}
+
+/* ==================== Animated Typing Indicator ==================== */
+.rce-typing-bubble {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  margin: 6px 0;
+  max-width: fit-content;
+}
+
+.rce-typing-dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 18px;
+}
+
+.rce-typing-dots span {
+  width: 6px;
+  height: 6px;
+  background: #818cf8;
+  border-radius: 50%;
+  display: inline-block;
+  animation: rce-bounce 1.4s infinite ease-in-out both;
+}
+
+.rce-typing-dots span:nth-child(1) { animation-delay: -0.32s; }
+.rce-typing-dots span:nth-child(2) { animation-delay: -0.16s; }
+.rce-typing-dots span:nth-child(3) { animation-delay: 0s; }
+
+.rce-typing-label {
+  font-size: 11px;
+  color: #94a3b8;
+  font-style: italic;
+}
+
+/* ==================== Chat Message Telemetry Stamp ==================== */
+.rce-message-stamp {
+  margin-top: 6px;
+  padding: 4px 8px;
+  background: rgba(255, 255, 255, 0.02);
+  border-top: 1px dashed rgba(255, 255, 255, 0.08);
+  font-size: 10px;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 0 0 6px 6px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.rce-message-stamp:hover {
+  background: rgba(99, 102, 241, 0.08);
+  color: #c7d2fe;
+}
+
+.rce-stamp-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.rce-stamp-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #818cf8;
+}
+
+/* Animations */
+@keyframes rce-bounce {
+  0%, 80%, 100% { transform: scale(0); opacity: 0.4; }
+  40% { transform: scale(1.0); opacity: 1; }
+}
+
+@keyframes rce-pulse-glow {
+  0% { box-shadow: 0 0 4px #22c55e; }
+  50% { box-shadow: 0 0 10px #22c55e; }
+  100% { box-shadow: 0 0 4px #22c55e; }
+}
